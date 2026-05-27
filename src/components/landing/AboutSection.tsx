@@ -1,98 +1,112 @@
 import { useRef, useEffect, useState } from "react";
-import { Headphones, Music, Mic2, Award } from "lucide-react";
+import Icon from "@/components/ui/icon";
 
-const achievements = [
-  { icon: <Headphones className="w-6 h-6" />, label: "Лет опыта", value: "10+" },
-  { icon: <Music className="w-6 h-6" />, label: "Созданных треков", value: "500+" },
-  { icon: <Mic2 className="w-6 h-6" />, label: "Коллабораций с артистами", value: "100+" },
-  { icon: <Award className="w-6 h-6" />, label: "Наград", value: "15+" },
+const galleryItems = [
+  {
+    type: "image",
+    url: "https://cdn.poehali.dev/projects/1329fde2-64e3-493d-b005-8daf4a0f707a/files/c9b93209-001c-401a-a4a2-a43692250d62.jpg",
+    title: "M72 World Tour 2024",
+    subtitle: "Стадион Лужники, Москва",
+  },
+  {
+    type: "video",
+    url: "https://www.youtube.com/embed/CD-E-LDc384",
+    title: "Master of Puppets — Live",
+    subtitle: "Official Music Video",
+  },
+  {
+    type: "video",
+    url: "https://www.youtube.com/embed/2uYs0gJD-LE",
+    title: "Enter Sandman — Live",
+    subtitle: "Live at Wembley",
+  },
+  {
+    type: "image",
+    url: "https://cdn.poehali.dev/projects/1329fde2-64e3-493d-b005-8daf4a0f707a/files/c9b93209-001c-401a-a4a2-a43692250d62.jpg",
+    title: "Backstage",
+    subtitle: "За кулисами тура",
+  },
 ];
 
 const AboutSection = () => {
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
+        if (entry.isIntersecting) setIsVisible(true);
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
+    if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const progress = Math.max(0, Math.min(1, 1 - rect.top / windowHeight));
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <section ref={ref} id="about" className="py-20 relative overflow-hidden">
+    <section ref={ref} id="gallery" className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div
-          className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
+          className={`text-center mb-16 transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+          }`}
+        >
+          <p className="text-red-500 uppercase tracking-widest text-sm font-semibold mb-3">
+            Фото и видео
+          </p>
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">Галерея</h2>
+          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+            Лучшие моменты со сцены и за кулисами
+          </p>
+        </div>
+
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto transition-all duration-700 ${
             isVisible ? "opacity-100" : "opacity-0"
           }`}
-          style={{ transform: `translateY(${(1 - scrollProgress) * 50}px)` }}
         >
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/0 rounded-3xl transform -rotate-6"></div>
-            <div className="w-full aspect-square bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-3xl relative z-10 flex items-center justify-center">
-              <div className="text-center p-8">
-                <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
-                  <Music className="w-16 h-16 text-white" />
-                </div>
-                <p className="text-zinc-400 text-lg">Фото продюсера</p>
-              </div>
-            </div>
-          </div>
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">О SoundForge</h2>
-            <p className="text-lg mb-6 text-zinc-300">
-              SoundForge — это не просто битмейкер, это звуковой архитектор, создающий саундскейпы
-              будущего. С десятилетним опытом и чутким слухом на инновации, SoundForge раздвигает
-              границы возможного в музыкальном продакшене.
-            </p>
-            <p className="text-lg mb-8 text-zinc-300">
-              От хитов в чартах до андеграундных гимнов — универсальный стиль и внимание к деталям
-              гарантируют, что каждый бит — это не просто трек, а путешествие, ждущее правильного
-              артиста.
-            </p>
-            <div className="grid grid-cols-2 gap-6">
-              {achievements.map((achievement, index) => (
-                <div
-                  key={achievement.label}
-                  className={`bg-zinc-900/50 rounded-lg p-4 border border-white/10 transition-all duration-500 ${
-                    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <div className="flex items-center mb-2">
-                    <div className="mr-2 text-white">{achievement.icon}</div>
-                    <div className="text-2xl font-bold text-white">{achievement.value}</div>
+          {galleryItems.map((item, index) => (
+            <div
+              key={index}
+              className={`relative group rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 cursor-pointer ${
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+              } hover:border-red-500/40 hover:scale-[1.02]`}
+              style={{ transitionDelay: `${index * 100}ms` }}
+              onClick={() => setSelected(index)}
+            >
+              {item.type === "image" ? (
+                <div className="relative aspect-video">
+                  <img
+                    src={item.url}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                  <div className="absolute bottom-4 left-4">
+                    <div className="text-white font-bold text-lg">{item.title}</div>
+                    <div className="text-zinc-400 text-sm">{item.subtitle}</div>
                   </div>
-                  <div className="text-sm text-zinc-400">{achievement.label}</div>
                 </div>
-              ))}
+              ) : (
+                <div className="relative aspect-video bg-zinc-900">
+                  <iframe
+                    src={item.url}
+                    title={item.title}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                  <div className="absolute bottom-4 left-4 pointer-events-none">
+                    <div className="flex items-center gap-2 bg-black/60 rounded-lg px-3 py-1">
+                      <Icon name="Play" size={14} className="text-red-500" />
+                      <div className="text-white font-semibold text-sm">{item.title}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

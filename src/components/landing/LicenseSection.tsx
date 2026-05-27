@@ -1,72 +1,70 @@
 import { useState, useRef, useEffect } from "react";
-import { Check, X, Crown, Zap, Star, Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Icon from "@/components/ui/icon";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-interface LicenseOption {
-  name: string;
-  price: string;
-  icon: React.ReactNode;
-  features: string[];
-  notIncluded?: string[];
-  bulkDeal?: string;
-  popular?: boolean;
+interface TourDate {
+  city: string;
+  country: string;
+  venue: string;
+  date: string;
+  month: string;
+  year: string;
+  soldOut?: boolean;
+  featured?: boolean;
 }
 
-const licenseOptions: LicenseOption[] = [
+const tourDates: TourDate[] = [
   {
-    name: "Стандартная лицензия",
-    price: "299 руб",
-    icon: <Star className="w-6 h-6" />,
-    features: [
-      "Использование для записи музыки",
-      "Распространение до 5 000 копий",
-      "75 000 онлайн-прослушиваний",
-      "1 музыкальный клип",
-      "Коммерческие выступления",
-      "Радиотрансляция (2 станции)",
-    ],
-    bulkDeal: "КУПИ 1 ТРЕК — ПОЛУЧИ 1 В ПОДАРОК!",
+    city: "Москва",
+    country: "Россия",
+    venue: "Лужники",
+    date: "14",
+    month: "Июн",
+    year: "2025",
+    featured: true,
   },
   {
-    name: "Продвинутая лицензия",
-    price: "499 руб",
-    icon: <Zap className="w-6 h-6" />,
-    features: [
-      "Использование для записи музыки",
-      "Распространение до 10 000 копий",
-      "150 000 онлайн-прослушиваний",
-      "1 музыкальный клип",
-      "Коммерческие выступления",
-      "Радиотрансляция (без ограничений)",
-    ],
-    popular: true,
+    city: "Берлин",
+    country: "Германия",
+    venue: "Olympiastadion",
+    date: "22",
+    month: "Июн",
+    year: "2025",
   },
   {
-    name: "Премиум лицензия",
-    price: "799 руб",
-    icon: <Crown className="w-6 h-6" />,
-    features: [
-      "Использование для записи музыки",
-      "Распространение до 20 000 копий",
-      "500 000 онлайн-прослушиваний",
-      "1 музыкальный клип",
-      "Только некоммерческие выступления",
-    ],
-    notIncluded: ["Без прав на радиотрансляцию"],
+    city: "Лондон",
+    country: "Великобритания",
+    venue: "Wembley Stadium",
+    date: "05",
+    month: "Июл",
+    year: "2025",
+    soldOut: true,
   },
   {
-    name: "Коммерческая лицензия",
-    price: "899 руб",
-    icon: <Globe className="w-6 h-6" />,
-    features: [
-      "Использование для записи музыки",
-      "Неограниченное распространение",
-      "Неограниченные онлайн-прослушивания",
-      "Неограниченное количество клипов",
-      "Коммерческие выступления",
-      "Радиотрансляция (без ограничений)",
-    ],
+    city: "Париж",
+    country: "Франция",
+    venue: "Stade de France",
+    date: "12",
+    month: "Июл",
+    year: "2025",
+  },
+  {
+    city: "Нью-Йорк",
+    country: "США",
+    venue: "MetLife Stadium",
+    date: "20",
+    month: "Авг",
+    year: "2025",
+  },
+  {
+    city: "Токио",
+    country: "Япония",
+    venue: "Tokyo Dome",
+    date: "10",
+    month: "Сен",
+    year: "2025",
+    soldOut: true,
   },
 ];
 
@@ -93,7 +91,7 @@ const LicenseSection = () => {
   }, []);
 
   return (
-    <section ref={ref} id="licenses" className="py-20 relative overflow-hidden">
+    <section ref={ref} id="tour" className="py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-black via-zinc-900/20 to-black"></div>
 
       <div className="container mx-auto px-4 relative">
@@ -102,17 +100,19 @@ const LicenseSection = () => {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">Выбери свою лицензию</h2>
+          <p className="text-red-500 uppercase tracking-widest text-sm font-semibold mb-3">
+            M72 World Tour
+          </p>
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-white">Афиша концертов</h2>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Подбери идеальную лицензию под свои потребности и начни создавать потрясающую музыку уже
-            сегодня
+            Metallica снова в дороге — не пропусти шанс увидеть легенду вживую
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {licenseOptions.map((option, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {tourDates.map((show, index) => (
             <div
-              key={option.name}
+              key={index}
               className={`transition-all duration-500 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
               }`}
@@ -121,63 +121,56 @@ const LicenseSection = () => {
               onMouseLeave={() => setHoveredCard(null)}
             >
               <Card
-                className={`relative h-full bg-black border-white/10 ${
-                  hoveredCard === index ? "scale-105" : "scale-100"
+                className={`relative bg-black border-white/10 ${
+                  hoveredCard === index && !show.soldOut ? "scale-105 border-red-500/40" : "scale-100"
                 } transition-all duration-300`}
               >
-                <div className="absolute inset-0 rounded-lg p-[1px] bg-gradient-to-br from-white/20 to-white/0">
-                  <div className="absolute inset-0 rounded-lg bg-black"></div>
-                </div>
-
-                {option.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                    <span className="bg-white text-black px-4 py-1 rounded-full text-sm font-semibold animate-pulse">
-                      Популярный
+                {show.featured && (
+                  <div className="absolute -top-3 left-4 z-10">
+                    <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      🔥 Ближайший
                     </span>
                   </div>
                 )}
-
-                <CardContent className="relative p-6 rounded-lg h-full flex flex-col">
-                  <div className="text-center mb-6">
-                    <div className="inline-flex p-3 rounded-full bg-zinc-900 border border-white/10 mb-4">
-                      {option.icon}
-                    </div>
-                    <h3 className="text-xl font-bold mb-2 text-white">{option.name}</h3>
-                    <div className="text-3xl font-bold text-white">{option.price}</div>
+                {show.soldOut && (
+                  <div className="absolute -top-3 right-4 z-10">
+                    <span className="bg-zinc-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                      Sold Out
+                    </span>
                   </div>
-
-                  <div className="flex-grow">
-                    <ul className="space-y-3 mb-6">
-                      {option.features.map((feature, i) => (
-                        <li key={i} className="flex items-start">
-                          <Check className="h-5 w-5 text-white mr-2 shrink-0 mt-0.5" />
-                          <span className="text-sm text-zinc-300">{feature}</span>
-                        </li>
-                      ))}
-                      {option.notIncluded?.map((feature, i) => (
-                        <li key={i} className="flex items-start text-zinc-500">
-                          <X className="h-5 w-5 text-zinc-500 mr-2 shrink-0 mt-0.5" />
-                          <span className="text-sm">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                )}
+                <CardContent className="p-6 flex items-center gap-5">
+                  <div className="text-center min-w-[60px]">
+                    <div className="text-3xl font-black text-red-500">{show.date}</div>
+                    <div className="text-sm font-semibold text-zinc-300 uppercase">{show.month}</div>
+                    <div className="text-xs text-zinc-500">{show.year}</div>
                   </div>
-
-                  {option.bulkDeal && (
-                    <div className="mb-4">
-                      <p className="text-sm font-semibold text-white bg-white/5 py-2 px-3 rounded-lg border border-white/10 animate-pulse">
-                        {option.bulkDeal}
-                      </p>
+                  <div className="w-px h-12 bg-white/10"></div>
+                  <div className="flex-1">
+                    <div className="text-lg font-bold text-white">{show.city}</div>
+                    <div className="text-sm text-zinc-400">{show.country}</div>
+                    <div className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
+                      <Icon name="MapPin" size={12} />
+                      {show.venue}
                     </div>
-                  )}
-
+                  </div>
                   <Button
-                    className="w-full bg-white text-black hover:bg-zinc-200 transition-colors"
-                    asChild
+                    size="sm"
+                    className={
+                      show.soldOut
+                        ? "bg-zinc-700 text-zinc-400 cursor-not-allowed"
+                        : "bg-red-600 hover:bg-red-700 text-white"
+                    }
+                    disabled={show.soldOut}
+                    asChild={!show.soldOut}
                   >
-                    <a href="#" target="_blank" rel="noopener noreferrer">
-                      Выбрать
-                    </a>
+                    {show.soldOut ? (
+                      <span>Нет билетов</span>
+                    ) : (
+                      <a href="#" target="_blank" rel="noopener noreferrer">
+                        Купить
+                      </a>
+                    )}
                   </Button>
                 </CardContent>
               </Card>
